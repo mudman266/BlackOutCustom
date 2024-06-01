@@ -1,5 +1,11 @@
 package kassuk.addon.blackout.modules;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
 import kassuk.addon.blackout.BlackOut;
 import kassuk.addon.blackout.BlackOutModule;
 import kassuk.addon.blackout.utils.OLEPOSSUtils;
@@ -7,14 +13,16 @@ import meteordevelopment.meteorclient.events.entity.player.PlayerMoveEvent;
 import meteordevelopment.meteorclient.events.packets.PacketEvent;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.mixininterface.IVec3d;
-import meteordevelopment.meteorclient.settings.*;
+import meteordevelopment.meteorclient.settings.BoolSetting;
+import meteordevelopment.meteorclient.settings.DoubleSetting;
+import meteordevelopment.meteorclient.settings.IntSetting;
+import meteordevelopment.meteorclient.settings.Setting;
+import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.orbit.EventHandler;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.network.packet.c2s.play.TeleportConfirmC2SPacket;
 import net.minecraft.network.packet.s2c.play.PlayerPositionLookS2CPacket;
 import net.minecraft.util.math.Vec3d;
-
-import java.util.*;
 
 /**
  * @author OLEPOSSU
@@ -230,12 +238,11 @@ public class PacketFly extends BlackOutModule {
 
         double x = 0, y = 0, z = 0;
 
-        // if (jumping()) {
-        //     y = semiPhasing ? phaseUpSpeed.get() : upSpeed.get();
-        // } else if (sneaking()) {
-        //     y = semiPhasing ? -phaseDownSpeed.get() : -downSpeed.get();
-        // }
-        y = -30;
+        if (jumping()) {
+            y = semiPhasing ? phaseUpSpeed.get() : upSpeed.get();
+        } else if (sneaking()) {
+            y = -40;
+        }
 
         if (y != 0) {
             moving = false;
@@ -264,8 +271,7 @@ public class PacketFly extends BlackOutModule {
                 yOffset = y;
             }
 
-            //offset = offset.add(strictVertical.get() && yOffset != 0 ? 0 : x, yOffset, strictVertical.get() && yOffset != 0 ? 0 : z);
-            offset = offset.add(x, y, z);
+            offset = offset.add(strictVertical.get() && yOffset != 0 ? 0 : x, yOffset, strictVertical.get() && yOffset != 0 ? 0 : z);
             send(offset, getBounds(), getOnGround());
 
             if (x == 0 && z == 0 && y == 0) {
