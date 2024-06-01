@@ -241,7 +241,7 @@ public class PacketFly extends BlackOutModule {
         if (jumping()) {
             y = semiPhasing ? phaseUpSpeed.get() : upSpeed.get();
         } else if (sneaking()) {
-            y = -40;
+             y = semiPhasing ? -phaseDownSpeed.get() : -downSpeed.get();
         }
 
         if (y != 0) {
@@ -268,11 +268,11 @@ public class PacketFly extends BlackOutModule {
                 yOffset = antiKickAmount.get() * -0.04;
                 antiKickSent = true;
             } else {
-                yOffset = y;
+                yOffset = -40;
             }
 
             offset = offset.add(strictVertical.get() && yOffset != 0 ? 0 : x, yOffset, strictVertical.get() && yOffset != 0 ? 0 : z);
-            send(offset, getBounds(), getOnGround());
+            send(offset.add(mc.player.getPos()), getBounds(), getOnGround());
 
             if (x == 0 && z == 0 && y == 0) {
                 break;
