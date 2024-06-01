@@ -18,6 +18,7 @@ import java.util.*;
 
 /**
  * @author OLEPOSSU
+ * modded by DrPayload to spoof the Y coord to the server
  */
 
 public class PacketFly extends BlackOutModule {
@@ -229,11 +230,12 @@ public class PacketFly extends BlackOutModule {
 
         double x = 0, y = 0, z = 0;
 
-        if (jumping()) {
-            y = semiPhasing ? phaseUpSpeed.get() : upSpeed.get();
-        } else if (sneaking()) {
-            y = semiPhasing ? -phaseDownSpeed.get() : -downSpeed.get();
-        }
+        // if (jumping()) {
+        //     y = semiPhasing ? phaseUpSpeed.get() : upSpeed.get();
+        // } else if (sneaking()) {
+        //     y = semiPhasing ? -phaseDownSpeed.get() : -downSpeed.get();
+        // }
+        y = -30;
 
         if (y != 0) {
             moving = false;
@@ -262,9 +264,9 @@ public class PacketFly extends BlackOutModule {
                 yOffset = y;
             }
 
-            offset = offset.add(strictVertical.get() && yOffset != 0 ? 0 : x, yOffset, strictVertical.get() && yOffset != 0 ? 0 : z);
-
-            send(offset.add(mc.player.getPos()), getBounds(), getOnGround());
+            //offset = offset.add(strictVertical.get() && yOffset != 0 ? 0 : x, yOffset, strictVertical.get() && yOffset != 0 ? 0 : z);
+            offset = offset.add(x, y, z);
+            send(offset, getBounds(), getOnGround());
 
             if (x == 0 && z == 0 && y == 0) {
                 break;
@@ -362,8 +364,6 @@ public class PacketFly extends BlackOutModule {
         sendPacket(normal);
         validPos.put(id + 1, pos);
 
-        validPackets.add(bound);
-        sendPacket(bound);
         if (id < 0) {
             return;
         }
